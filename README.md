@@ -5,6 +5,9 @@
 ![image](images/red_dot.gif)
 
 ## 开始使用
+
+### 在RedDotPrompt/reddotLibrary/outputJar/目录下找到pixel-red-dot.jar,导入到你项目中的libs目录.然后加入编译.
+
 ### 在需要小红点提示的布局文件中加入控件.tag属性的格式是:"${自己ID}#S{父级ID}".如:"1#-1",1代表自己的ID,-1代表没有父级.格式一定要正确,最好使用int类型.tag属性一定不能为空.
 ![image](images/xml_code.png)
 
