@@ -36,13 +36,18 @@ public class RedDotUtil {
         }
     }
 
-    public synchronized static void initRedDotViews(Context context, List<String> tags) {
-        for (String tag : tags) {
-            String[] id = tag.split(SEPARATOR);
-            if (ViewMsg.queryByView(context, id[0]) == null) {
-                ViewMsg.save(context, new ViewMsg(-1, id[0], id[1], 0));
+    public synchronized static void initRedDotViews(final Context context, final List<String> tags) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (String tag : tags) {
+                    String[] id = tag.split(SEPARATOR);
+                    if (ViewMsg.queryByView(context, id[0]) == null) {
+                        ViewMsg.save(context, new ViewMsg(-1, id[0], id[1], 0));
+                    }
+                }
             }
-        }
+        }).start();
     }
 
     public synchronized static void updateMessage(Context context, String tag, int msgNumber) {

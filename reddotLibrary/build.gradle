@@ -37,7 +37,7 @@ task makeJar(type: Copy) {
     into('outputJar/') //打进jar包后的文件目录
     //将classes.jar放入build/libs/目录下 include ,exclude参数来设置过滤 （我们只关心classes.jar这个文件）
     include('classes.jar')
-    rename('classes.jar', 'pixel-red-dot.jar') //重命名
+    rename('classes.jar', 'pixel-red-dot-textview.jar') //重命名
 }
 
 makeJar.dependsOn(build)

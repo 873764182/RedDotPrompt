@@ -49,8 +49,7 @@ public class RedDotTextView extends TextView {
         } else {
             ViewMsg.update(mContext, new ViewMsg(msg.get_id(), msgs[0], msgs[1], msg.getMsgNumber()));  // 主要是为避免父ID改变的情况下
         }
-
-        this.setVisibility(INVISIBLE);
+//        this.setVisibility(INVISIBLE);
         msg = ViewMsg.queryByView(mContext, msgs[0]);
         msgSize = msg.getMsgNumber();
         this.getAllSubclass(msgs[0]);
@@ -60,11 +59,12 @@ public class RedDotTextView extends TextView {
                 msgSize += sMsg.getMsgNumber();
             }
         }
+
         if (msgSize > 0) {
-            this.setVisibility(VISIBLE);
-            this.setText(String.valueOf(msgSize));
+            setVisibility(VISIBLE);
+            setText(String.valueOf(msgSize));
         } else {
-            this.setVisibility(INVISIBLE);
+            setVisibility(INVISIBLE);
         }
 
         RedDotUtil.addView(msgs[0], this);
