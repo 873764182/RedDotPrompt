@@ -26,17 +26,22 @@ public class RedDotTextView extends TextView {
     public RedDotTextView(Context context) {
         super(context);
         this.mContext = context;
+
+        this.onInit();
     }
 
     public RedDotTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.mContext = context;
+
+        this.onInit();
     }
 
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        if (changed) onInit();
+    public RedDotTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        this.mContext = context;
+
+        this.onInit();
     }
 
     public void onInit() {
