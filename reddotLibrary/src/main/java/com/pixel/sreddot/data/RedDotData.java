@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class RedDotData extends SQLiteOpenHelper {
+    public static volatile String TAG = "red_dot";
 
     public RedDotData(Context context) {
         super(context, "red_dot.db", null, 1);
@@ -25,7 +26,7 @@ public class RedDotData extends SQLiteOpenHelper {
          *  MsgNumber 自己要显示的消息数量
          */
         db.execSQL("CREATE TABLE IF NOT EXISTS ViewMsg " +
-                "(_id INTEGER PRIMARY KEY AUTOINCREMENT, OneselfId INTEGER, ParentId INTEGER, MsgNumber INTEGER)");
+                "(_id INTEGER PRIMARY KEY AUTOINCREMENT, OneselfId VARCHAR, ParentId VARCHAR, MsgNumber INTEGER, Tag VARCHAR)");
     }
 
     @Override

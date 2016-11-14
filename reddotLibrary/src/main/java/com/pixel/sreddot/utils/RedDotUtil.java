@@ -3,6 +3,7 @@ package com.pixel.sreddot.utils;
 import android.content.Context;
 
 import com.pixel.sreddot.RedDotTextView;
+import com.pixel.sreddot.data.RedDotData;
 import com.pixel.sreddot.entity.ViewMsg;
 
 import java.util.Hashtable;
@@ -63,5 +64,13 @@ public class RedDotUtil {
             ViewMsg.updateByView(context, new ViewMsg(-1, oneselfId, ParentId, msgNumber));
         }
         executeRefresh();
+    }
+
+    public static void setRedDotTag(String tag) {
+        RedDotData.TAG = tag;
+    }
+
+    public static String getRedDotTag() {
+        return RedDotData.TAG;
     }
 }

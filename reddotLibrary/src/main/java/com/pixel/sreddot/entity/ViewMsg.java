@@ -76,42 +76,42 @@ public class ViewMsg {
 
     public static void save(Context context, ViewMsg message) {
         RedDotData.executeUpdate(context,
-                "INSERT INTO ViewMsg (OneselfId, ParentId, MsgNumber) VALUES (?, ?, ?)",
-                message.getOneselfId(), message.getParentId(), message.getMsgNumber() + "");
+                "INSERT INTO ViewMsg (OneselfId, ParentId, MsgNumber, Tag) VALUES (?, ?, ?, ?)",
+                message.getOneselfId(), message.getParentId(), message.getMsgNumber() + "", RedDotData.TAG);
     }
 
     public static void update(Context context, ViewMsg message) {
         RedDotData.executeUpdate(context,
-                "UPDATE ViewMsg SET OneselfId = ?, ParentId = ?, MsgNumber = ? WHERE _id = ?",
-                message.getOneselfId(), message.getParentId(), message.getMsgNumber() + "", message.get_id() + "");
+                "UPDATE ViewMsg SET OneselfId = ?, ParentId = ?, MsgNumber = ? WHERE (_id = ? AND Tag = ?)",
+                message.getOneselfId(), message.getParentId(), message.getMsgNumber() + "", message.get_id() + "", RedDotData.TAG);
     }
 
     public static void updateByView(Context context, ViewMsg message) {
         RedDotData.executeUpdate(context,
-                "UPDATE ViewMsg SET OneselfId = ?, ParentId = ?, MsgNumber = ? WHERE OneselfId = ?",
-                message.getOneselfId(), message.getParentId(), message.getMsgNumber() + "", message.getOneselfId());
+                "UPDATE ViewMsg SET OneselfId = ?, ParentId = ?, MsgNumber = ? WHERE (OneselfId = ? AND Tag = ?)",
+                message.getOneselfId(), message.getParentId(), message.getMsgNumber() + "", message.getOneselfId(), RedDotData.TAG);
     }
 
     public static void delete(Context context, Integer _id) {
         RedDotData.executeUpdate(context,
-                "DELETE FROM ViewMsg WHERE _id = ?", _id.toString());
+                "DELETE FROM ViewMsg WHERE (_id = ? AND Tag = ?)", _id.toString(), RedDotData.TAG);
     }
 
     public static void deleteByView(Context context, String viewId) {
         RedDotData.executeUpdate(context,
-                "DELETE FROM ViewMsg WHERE OneselfId = ?", viewId);
+                "DELETE FROM ViewMsg WHERE (OneselfId = ? AND Tag = ?)", viewId, RedDotData.TAG);
     }
 
     public static ViewMsg query(Context context, Integer _id) {
         Cursor cursor = RedDotData.executeQuery(context,
-                "SELECT * FROM ViewMsg WHERE _id = ?", _id.toString());
+                "SELECT * FROM ViewMsg WHERE (_id = ? AND Tag = ?)", _id.toString(), RedDotData.TAG);
         List<ViewMsg> messageList = cursorToMessage(cursor);
         return messageList.size() > 0 ? messageList.get(0) : null;
     }
 
     public static ViewMsg queryByView(Context context, String viewId) {
         Cursor cursor = RedDotData.executeQuery(context,
-                "SELECT * FROM ViewMsg WHERE OneselfId = ?", viewId);
+                "SELECT * FROM ViewMsg WHERE (OneselfId = ? AND Tag = ?)", viewId, RedDotData.TAG);
         List<ViewMsg> messageList = cursorToMessage(cursor);
         return messageList.size() > 0 ? messageList.get(0) : null;
     }
@@ -121,17 +121,17 @@ public class ViewMsg {
     }
 
     public static List<ViewMsg> query(Context context, Integer startPage, Integer endPage) {
-        String sql = "SELECT * FROM ViewMsg";
+        String sql = "SELECT * FROM ViewMsg WHERE Tag = ?";
         if (startPage != -1 && endPage != -1) {
             sql += " LIMIT " + startPage + ", " + endPage;
         }
-        return cursorToMessage(RedDotData.executeQuery(context, sql));
+        return cursorToMessage(RedDotData.executeQuery(context, sql, RedDotData.TAG));
     }
 
     // 获取直接子类列表
     public static List<ViewMsg> querySubclass(Context context, String OneselfId) {
         return cursorToMessage(RedDotData.executeQuery(context,
-                "SELECT * FROM ViewMsg WHERE ParentId = ?", OneselfId));
+                "SELECT * FROM ViewMsg WHERE (ParentId = ? AND Tag = ?)", OneselfId, RedDotData.TAG));
     }
 
     private static List<ViewMsg> cursorToMessage(Cursor cursor) {
