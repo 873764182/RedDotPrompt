@@ -20,7 +20,7 @@ import java.util.Map;
 public class RedDotTextView extends TextView {
     private final Map<String, ViewMsg> msgMap = new Hashtable<>();
     private Context mContext = null;
-    private String[] msgs = new String[2];
+    private String[] msgs = null;
     private int msgSize = 0;
 
     public RedDotTextView(Context context) {
@@ -45,8 +45,16 @@ public class RedDotTextView extends TextView {
     }
 
     public void onInit() {
+        if (this.getTag() == null) {
+            throw new NullPointerException("控件tag属性不能为空");
+        }
         String tagStr = this.getTag().toString();
-        msgs = tagStr.split(RedDotUtil.SEPARATOR);   // 要求必须设置tag属性 格式也要按要求
+        // TODO 要求必须设置tag属性 格式也要按要求 如101#100#true 101是当前控件的ID,100是当前控件的父ID,true代表只显示红点不显示消息数量.
+        msgs = tagStr.split(RedDotUtil.SEPARATOR);
+
+        if (msgs == null || msgs.length < 2) {
+            throw new NullPointerException("控件tag属性值格式不对. 如101#100#true,101是当前控件的ID,100是当前控件的父ID,true代表只显示true这个默认文字不显示消息数量.");
+        }
 
         ViewMsg msg = ViewMsg.queryByView(mContext, msgs[0]);
         if (msg == null) {
@@ -67,7 +75,11 @@ public class RedDotTextView extends TextView {
 
         if (msgSize > 0) {
             setVisibility(VISIBLE);
-            setText(String.valueOf(msgSize));
+            if (msgs.length >= 3) {   // 只显示点 不显示 消息数量
+                setText(msgs[2]);
+            } else {
+                setText(String.valueOf(msgSize));
+            }
         } else {
             setVisibility(INVISIBLE);
         }

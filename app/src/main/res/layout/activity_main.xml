@@ -81,6 +81,6 @@
         android:layout_margin="16dp"
         android:background="@drawable/notice_backdrop"
         android:gravity="center"
-        android:tag="1#-1"
+        android:tag="1#-1# "
         android:textColor="#FFFFFF" />
 </LinearLayout>
