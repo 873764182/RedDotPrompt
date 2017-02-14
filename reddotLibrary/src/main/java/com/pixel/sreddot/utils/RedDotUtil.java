@@ -3,12 +3,16 @@ package com.pixel.sreddot.utils;
 import android.content.Context;
 
 import com.pixel.sreddot.RedDotTextView;
+import com.pixel.sreddot.callback.OnMessageUpdateListener;
 import com.pixel.sreddot.data.RedDotData;
 import com.pixel.sreddot.entity.ViewMsg;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Administrator on 2016/10/24.
@@ -33,7 +37,9 @@ public class RedDotUtil {
     public synchronized static void executeRefresh() {
         for (Map.Entry<String, RedDotTextView> entry : RED_DOT_TEXT_VIEW_MAP.entrySet()) {
             RedDotTextView textView = entry.getValue();
-            if (textView != null) textView.onInit();
+            if (textView != null) {
+                textView.onInit();
+            }
         }
     }
 
@@ -56,14 +62,20 @@ public class RedDotUtil {
         updateMessage(context, id[0], id[1], msgNumber);
     }
 
-    public synchronized static void updateMessage(Context context, String oneselfId, String ParentId, int msgNumber) {
+    public synchronized static void updateMessage(Context context, String oneselfId, String parentId, int msgNumber) {
         ViewMsg msg = ViewMsg.queryByView(context, oneselfId);
         if (msg == null) {
-            ViewMsg.save(context, new ViewMsg(-1, oneselfId, ParentId, msgNumber));
+            ViewMsg.save(context, new ViewMsg(-1, oneselfId, parentId, msgNumber));
         } else {
-            ViewMsg.updateByView(context, new ViewMsg(-1, oneselfId, ParentId, msgNumber));
+            ViewMsg.updateByView(context, new ViewMsg(-1, oneselfId, parentId, msgNumber));
         }
+
         executeRefresh();
+
+        // TODO 回调消息更新监听接口
+        for (OnMessageUpdateListener onMessageUpdateListener : messageUpdateListenerList) {
+            onMessageUpdateListener.onUpdate(oneselfId + "#" + parentId, msgNumber);
+        }
     }
 
     // 设置个别名,如当前用户登录有消息,但是换一个用户登录时,消息应该不存在.
@@ -121,6 +133,19 @@ public class RedDotUtil {
                 getAllSubclass(context, msgMap, message.getOneselfId());
             }
         }
+    }
+
+    /**
+     * 有一些平级的View(不属于当前库管理的View)在消息变更时也需要更新
+     */
+    private static final Set<OnMessageUpdateListener> messageUpdateListenerList = new HashSet<>();
+
+    public static void addOnMessageUpdateListener(OnMessageUpdateListener onMessageUpdateListener) {
+        messageUpdateListenerList.add(onMessageUpdateListener);
+    }
+
+    public static void removeOnMessageUpdateListener(OnMessageUpdateListener onMessageUpdateListener) {
+        messageUpdateListenerList.remove(onMessageUpdateListener);
     }
 
 }
