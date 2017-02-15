@@ -144,6 +144,7 @@ public class ViewMsg {
             message.setMsgNumber(cursor.getInt(3));
             messageList.add(message);
         }
+        cursor.close();
         return messageList;
     }
 
