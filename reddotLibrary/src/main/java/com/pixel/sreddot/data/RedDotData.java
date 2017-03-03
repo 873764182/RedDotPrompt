@@ -10,10 +10,9 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class RedDotData extends SQLiteOpenHelper {
-    public static volatile String TAG = "red_dot";
 
     public RedDotData(Context context) {
-        super(context, "red_dot.db", null, 1);
+        super(context, "red_dot_msg.db", null, 1);
     }
 
     @Override

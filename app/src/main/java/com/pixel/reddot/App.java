@@ -17,7 +17,7 @@ public class App extends Application {
         super.onCreate();
 
         // 传入一个String列表,这些String对应RedDotTextView的tag属性,有多少个RedDotTextView就传入多少个tag
-        RedDotUtil.initRedDotViews(this, new ArrayList<String>() {
+        RedDotUtil.registerViews(this, new ArrayList<String>() {
             {
                 add("1#-1");
                 add("2#1");

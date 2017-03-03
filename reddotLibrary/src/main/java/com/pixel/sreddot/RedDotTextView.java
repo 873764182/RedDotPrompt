@@ -18,6 +18,7 @@ import java.util.Map;
  */
 
 public class RedDotTextView extends TextView {
+
     private final Map<String, ViewMsg> msgMap = new Hashtable<>();
     private Context mContext = null;
     private String[] msgs = null;
@@ -50,7 +51,7 @@ public class RedDotTextView extends TextView {
             throw new NullPointerException("控件tag属性不能为空");
         }
         msgs = tag.toString().split(RedDotUtil.SEPARATOR);
-        msgSize = RedDotUtil.getMsgSize(mContext, msgs);
+        msgSize = RedDotUtil.getMsgSize(mContext, msgs, true);
         if (msgSize > 0) {
             setVisibility(VISIBLE);
             if (msgs.length >= 3) {   // 只显示点 不显示 消息数量

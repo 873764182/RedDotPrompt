@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.pixel.sreddot.data.RedDotData;
+import com.pixel.sreddot.utils.RedDotUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 
 public class ViewMsg {
+
     private int _id = -1;
     private String oneselfId = "";
     private String parentId = "";
@@ -77,41 +79,41 @@ public class ViewMsg {
     public static void save(Context context, ViewMsg message) {
         RedDotData.executeUpdate(context,
                 "INSERT INTO ViewMsg (OneselfId, ParentId, MsgNumber, Tag) VALUES (?, ?, ?, ?)",
-                message.getOneselfId(), message.getParentId(), message.getMsgNumber() + "", RedDotData.TAG);
+                message.getOneselfId(), message.getParentId(), message.getMsgNumber() + "", RedDotUtil.getAlias(context));
     }
 
     public static void update(Context context, ViewMsg message) {
         RedDotData.executeUpdate(context,
                 "UPDATE ViewMsg SET OneselfId = ?, ParentId = ?, MsgNumber = ? WHERE (_id = ? AND Tag = ?)",
-                message.getOneselfId(), message.getParentId(), message.getMsgNumber() + "", message.get_id() + "", RedDotData.TAG);
+                message.getOneselfId(), message.getParentId(), message.getMsgNumber() + "", message.get_id() + "", RedDotUtil.getAlias(context));
     }
 
     public static void updateByView(Context context, ViewMsg message) {
         RedDotData.executeUpdate(context,
                 "UPDATE ViewMsg SET OneselfId = ?, ParentId = ?, MsgNumber = ? WHERE (OneselfId = ? AND Tag = ?)",
-                message.getOneselfId(), message.getParentId(), message.getMsgNumber() + "", message.getOneselfId(), RedDotData.TAG);
+                message.getOneselfId(), message.getParentId(), message.getMsgNumber() + "", message.getOneselfId(), RedDotUtil.getAlias(context));
     }
 
     public static void delete(Context context, Integer _id) {
         RedDotData.executeUpdate(context,
-                "DELETE FROM ViewMsg WHERE (_id = ? AND Tag = ?)", _id.toString(), RedDotData.TAG);
+                "DELETE FROM ViewMsg WHERE (_id = ? AND Tag = ?)", _id.toString(), RedDotUtil.getAlias(context));
     }
 
     public static void deleteByView(Context context, String viewId) {
         RedDotData.executeUpdate(context,
-                "DELETE FROM ViewMsg WHERE (OneselfId = ? AND Tag = ?)", viewId, RedDotData.TAG);
+                "DELETE FROM ViewMsg WHERE (OneselfId = ? AND Tag = ?)", viewId, RedDotUtil.getAlias(context));
     }
 
     public static ViewMsg query(Context context, Integer _id) {
         Cursor cursor = RedDotData.executeQuery(context,
-                "SELECT * FROM ViewMsg WHERE (_id = ? AND Tag = ?)", _id.toString(), RedDotData.TAG);
+                "SELECT * FROM ViewMsg WHERE (_id = ? AND Tag = ?)", _id.toString(), RedDotUtil.getAlias(context));
         List<ViewMsg> messageList = cursorToMessage(cursor);
         return messageList.size() > 0 ? messageList.get(0) : null;
     }
 
     public static ViewMsg queryByView(Context context, String viewId) {
         Cursor cursor = RedDotData.executeQuery(context,
-                "SELECT * FROM ViewMsg WHERE (OneselfId = ? AND Tag = ?)", viewId, RedDotData.TAG);
+                "SELECT * FROM ViewMsg WHERE (OneselfId = ? AND Tag = ?)", viewId, RedDotUtil.getAlias(context));
         List<ViewMsg> messageList = cursorToMessage(cursor);
         return messageList.size() > 0 ? messageList.get(0) : null;
     }
@@ -125,13 +127,13 @@ public class ViewMsg {
         if (startPage != -1 && endPage != -1) {
             sql += " LIMIT " + startPage + ", " + endPage;
         }
-        return cursorToMessage(RedDotData.executeQuery(context, sql, RedDotData.TAG));
+        return cursorToMessage(RedDotData.executeQuery(context, sql, RedDotUtil.getAlias(context)));
     }
 
     // 获取直接子类列表
     public static List<ViewMsg> querySubclass(Context context, String OneselfId) {
         return cursorToMessage(RedDotData.executeQuery(context,
-                "SELECT * FROM ViewMsg WHERE (ParentId = ? AND Tag = ?)", OneselfId, RedDotData.TAG));
+                "SELECT * FROM ViewMsg WHERE (ParentId = ? AND Tag = ?)", OneselfId, RedDotUtil.getAlias(context)));
     }
 
     private static List<ViewMsg> cursorToMessage(Cursor cursor) {
