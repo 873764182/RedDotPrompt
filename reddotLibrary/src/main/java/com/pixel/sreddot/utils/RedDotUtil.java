@@ -15,13 +15,20 @@ import java.util.Set;
 
 /**
  * Created by Administrator on 2016/10/24.
+ * <p>
+ * API集合
  */
 
 public class RedDotUtil {
 
-    public static final String ALIAS = "red_view_alias";    // 别名KEY
-    public static final String SEPARATOR = "#"; // 分隔符
-    public static final Map<String, RedDotTextView> RED_DOT_TEXT_VIEW_MAP = new Hashtable<>();  // 控件容器
+    // 控件容器
+    protected static final Map<String, RedDotTextView> VIEW_MAP = new Hashtable<>();
+    // 监听器集合
+    protected static final Set<OnMessageUpdateListener> msgUpdateListeners = new HashSet<>();
+    // 别名KEY
+    public static final String ALIAS = "red_view_alias";
+    // 分隔符
+    public static final String SEPARATOR = "#";
 
     /**
      * 添加一个控件到容器
@@ -30,8 +37,8 @@ public class RedDotUtil {
      * @param view   控件
      */
     public synchronized static void addView(String viewId, RedDotTextView view) {
-        if (RED_DOT_TEXT_VIEW_MAP.get(viewId) == null) {
-            RED_DOT_TEXT_VIEW_MAP.put(viewId, view);
+        if (VIEW_MAP.get(viewId) == null) {
+            VIEW_MAP.put(viewId, view);
         }
     }
 
@@ -41,8 +48,8 @@ public class RedDotUtil {
      * @param viewId 控件ID
      */
     public synchronized static void delView(String viewId) {
-        if (RED_DOT_TEXT_VIEW_MAP.get(viewId) != null) {
-            RED_DOT_TEXT_VIEW_MAP.remove(viewId);
+        if (VIEW_MAP.get(viewId) != null) {
+            VIEW_MAP.remove(viewId);
         }
     }
 
@@ -50,7 +57,7 @@ public class RedDotUtil {
      * 刷新所有控件
      */
     public synchronized static void executeViewsRefresh() {
-        for (Map.Entry<String, RedDotTextView> entry : RED_DOT_TEXT_VIEW_MAP.entrySet()) {
+        for (Map.Entry<String, RedDotTextView> entry : VIEW_MAP.entrySet()) {
             RedDotTextView textView = entry.getValue();
             if (textView != null) {
                 textView.onInit();
@@ -109,7 +116,7 @@ public class RedDotUtil {
         RedDotUtil.executeViewsRefresh();
 
         // 回调消息更新监听接口
-        for (OnMessageUpdateListener onMessageUpdateListener : messageUpdateListenerList) {
+        for (OnMessageUpdateListener onMessageUpdateListener : msgUpdateListeners) {
             onMessageUpdateListener.onUpdate(oneselfId + "#" + parentId, msgNumber);
         }
     }
@@ -216,15 +223,13 @@ public class RedDotUtil {
         }
     }
 
-    private static final Set<OnMessageUpdateListener> messageUpdateListenerList = new HashSet<>();
-
     /**
      * 注册一个消息更新监听器.有一些平级的View(不属于当前库管理的View)在消息变更时也需要更新
      *
      * @param onMessageUpdateListener 消息更新监听器
      */
     public synchronized static void addOnMessageUpdateListener(OnMessageUpdateListener onMessageUpdateListener) {
-        messageUpdateListenerList.add(onMessageUpdateListener);
+        msgUpdateListeners.add(onMessageUpdateListener);
     }
 
     /**
@@ -233,7 +238,7 @@ public class RedDotUtil {
      * @param onMessageUpdateListener 消息更新监听器
      */
     public synchronized static void removeOnMessageUpdateListener(OnMessageUpdateListener onMessageUpdateListener) {
-        messageUpdateListenerList.remove(onMessageUpdateListener);
+        msgUpdateListeners.remove(onMessageUpdateListener);
     }
 
     /**
